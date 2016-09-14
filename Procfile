@@ -1,0 +1,1 @@
+web: bundle exec ruby mtg-bot.rb -p $PORT
