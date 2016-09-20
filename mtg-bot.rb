@@ -4,6 +4,12 @@ require 'json'
 
 get "/mtg-bot" do 
 	name = params["name"] || params["text"]
+
+	if(name.include?("\“") || name.include?("\“"))
+		name = name.gsub("\“", "")
+		name = name.gsub("\“", "")
+	end
+	
 	cards = MTG::Card.where(name: name).all
 	text = "No match found."
 	
@@ -15,6 +21,7 @@ get "/mtg-bot" do
 			text = name + " had no matches with images."
 		end
 	end
+	text = text + "\n search term: " + name
 
 	content_type :json
 	{ 
