@@ -8,6 +8,8 @@ get "/mtg-bot" do
 	if(name.include?("\“") || name.include?("\“"))
 		name = name.gsub("\“", "")
 		name = name.gsub("\“", "")
+		name = name.gsub("\"", "")
+		name = "\"" + name + "\""
 	end
 	
 	cards = MTG::Card.where(name: name).all
