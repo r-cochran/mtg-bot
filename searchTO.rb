@@ -8,4 +8,8 @@ class SearchTO
 	def show_sets?
 		@name == "set list"
 	end
+
+	def has_set?
+		!@set.nil? && @set != ""
+	end
 end

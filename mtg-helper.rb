@@ -5,11 +5,8 @@ require './set_map.rb'
 module MTGHelperModule
 	
 	def get_search_term(params)
-		term = params["name"] || params["text"]
-		puts("term: " + term)
-		terms = term.split("#")
+		terms = params["text"].split("#")
 		name = terms[0]
-		puts("name1: " + name)
 		set = terms[1]
 		if(name.include?("\“") || name.include?("\“"))
 			name = name.gsub("\“", "")
@@ -19,7 +16,7 @@ module MTGHelperModule
 		end
 		searchTO = SearchTO.new()
 		searchTO.name = name
-		if($set_map.keys.include?(set) || $set_map.keys.include?(set.upcase))
+		if(!set.nil? && ($set_map.keys.include?(set) || $set_map.keys.include?(set.upcase)))
 			searchTO.set = set.downcase;
 		end	
 		searchTO
@@ -53,7 +50,9 @@ module MTGHelperModule
 			end
 		end
 		text += "\n search term: " + searchTO.name
-		text += "\n set: " + searchTO.set + " - " + $set_map[searchTO.set.upcase]
+		if(searchTO.has_set?)
+			text += "\n set: " + searchTO.set + " - " + $set_map[searchTO.set]
+		end
 		text
 	end
 end
