@@ -39,6 +39,7 @@ module MTGHelperModule
 
 	def getCard(searchTO)
 		cards = MTG::Card.where(name: searchTO.name, set: searchTO.set).all
+		release_list = []
 		text = "No match found."
 		
 		if(cards.any?)
@@ -48,11 +49,16 @@ module MTGHelperModule
 			if(!card.nil?)
 				text = card.image_url
 			end
+			cards.collect { |c|
+				release_list << c.set_name + "(" + c.set + ")"
+			}
+			release_list.uniq!()
 		end
 		text += "\n search term: " + searchTO.name
 		if(searchTO.has_set?)
 			text += "\n set: " + searchTO.set + " - " + $set_map[searchTO.set]
 		end
+		text += "\n Releases: " + release_list.join(", ")
 		text
 	end
 end
