@@ -42,11 +42,11 @@ module MTGHelperModule
 		text = "No match found."
 		
 		if(cards.any?)
-			card = cards.find { |c| c.image_url != nil and c.image_url != ""}
+			card = cards.find { |c|
+				c.image_url != nil and c.image_url != "" and c.set_name != "Vanguard"
+			}
 			if(!card.nil?)
-				text = card.image_url	
-			else
-				text = name + " had no matches with images."
+				text = card.image_url
 			end
 		end
 		text += "\n search term: " + searchTO.name
