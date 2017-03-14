@@ -1,4 +1,5 @@
 $set_map = {
+    "LOL" => "Custom game history images",
 		"LEA" => "Alpha (Limited Edition)",
 		"LEB" => "Beta (Limited Edition)",
 		"2ED" => "Unlimited Edition",

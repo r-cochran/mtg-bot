@@ -1,6 +1,7 @@
 require 'mtg_sdk'
 require './searchTO.rb'
 require './set_map.rb'
+require './gag_map.rb'
 
 module MTGHelperModule
 	
@@ -38,10 +39,25 @@ module MTGHelperModule
 	end
 
 	def getCard(searchTO)
+		(searchTO.set == "LOL") ? getGagCard(searchTO) : getRealCard(searchTO)
+	end
+
+	def getGagCard(searchTO)
+		text = "No match found."
+
+		if($gagMap.keys.include?(searchTO.name))
+			gag = $gagMap[searchTO.name]
+			text = gag[:img] + "\n"
+			text += "Story: " + gag[:story]
+		end
+		text
+	end
+
+	def getRealCard(searchTO)
 		cards = MTG::Card.where(name: searchTO.name, set: searchTO.set).all
 		release_list = []
 		text = "No match found."
-		
+
 		if(cards.any?)
 			card = cards.find { |c|
 				c.image_url != nil and c.image_url != "" and c.set_name != "Vanguard"
