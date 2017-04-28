@@ -4,23 +4,18 @@ require './set_map.rb'
 require './gag_map.rb'
 
 module MTGHelperModule
+	SANITIZATION_CHARACTERS = /(?:\u201C|\u201D|")/
 	
 	def get_search_term(params)
-		terms = params["text"].split("#")
-		name = terms[0]
-		set = terms[1]
-		if(name.include?("\“") || name.include?("\“"))
-			name = name.gsub("\“", "")
-			name = name.gsub("\“", "")
-			name = name.gsub("\"", "")
-			name = "\"" + name + "\""
+		name, set = params["text"].split("#")
+		if name =~ SANITIZATION_CHARACTERS
+			name.gsub!(SANITIZATION_CHARACTERS, "")
+			name = "\"#{name}\""
 		end
-		searchTO = SearchTO.new()
-		searchTO.name = name
-		if(!set.nil? && ($set_map.keys.include?(set) || $set_map.keys.include?(set.upcase)))
-			searchTO.set = set.upcase;
-		end	
-		searchTO
+		SearchTO.new.tap do |s|
+			s.name = name
+			s.set = set.upcase if set && $set_map.keys.include?(set.upcase)
+		end
 	end
 
 	def get_help()
