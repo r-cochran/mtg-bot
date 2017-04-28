@@ -6,21 +6,17 @@ require './gag_map.rb'
 module MTGHelperModule
 	
 	def get_search_term(params)
-		terms = params["text"].split("#")
-		name = terms[0]
-		set = terms[1]
-		if(name.include?("\“") || name.include?("\“"))
-			name = name.gsub("\“", "")
-			name = name.gsub("\“", "")
+		name, set = params["text"].split("#")
+		if name.include?("\u201C") || name.include?("\u201D")
+			name = name.gsub("\u201C", "")
+			name = name.gsub("\u201D", "")
 			name = name.gsub("\"", "")
 			name = "\"" + name + "\""
 		end
-		searchTO = SearchTO.new()
-		searchTO.name = name
-		if(set && ($set_map.keys.include?(set) || $set_map.keys.include?(set.upcase)))
-			searchTO.set = set.upcase
-		end	
-		searchTO
+		SearchTO.new.tap do |s|
+			s.name = name
+			s.set = set.upcase if set && $set_map.keys.include?(set.upcase)
+		end
 	end
 
 	def get_help()

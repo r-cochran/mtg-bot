@@ -29,6 +29,20 @@ describe 'MTGHelperModule' do
         expect(subject.get_search_term('text' => "mtg card#").set).to be_nil
       end
     end
+
+    context 'parsing card name' do
+      # http://www.fileformat.info/info/unicode/char/201C/index.htm
+      it 'should parse out Left Double Quote UTF-8 character' do
+        expect(subject.get_search_term('text' => '“sweet mythic').name).to eql '"sweet mythic"'
+        expect(subject.get_search_term('text' => "\u201Cdat mythic").name).to eql '"dat mythic"'
+      end
+
+      # http://www.fileformat.info/info/unicode/char/201d/index.htm
+      it 'should parse out Right Double Quote UTF-8 character' do
+        expect(subject.get_search_term('text' => "rad rare”").name).to eql '"rad rare"'
+        expect(subject.get_search_term('text' => "rude artifact\u201D").name).to eql '"rude artifact"'
+      end
+    end
   end
 end
 
