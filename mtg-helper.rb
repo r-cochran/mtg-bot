@@ -17,8 +17,8 @@ module MTGHelperModule
 		end
 		searchTO = SearchTO.new()
 		searchTO.name = name
-		if(!set.nil? && ($set_map.keys.include?(set) || $set_map.keys.include?(set.upcase)))
-			searchTO.set = set.upcase;
+		if(set && ($set_map.keys.include?(set) || $set_map.keys.include?(set.upcase)))
+			searchTO.set = set.upcase
 		end	
 		searchTO
 	end
