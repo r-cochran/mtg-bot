@@ -4,14 +4,13 @@ require './set_map.rb'
 require './gag_map.rb'
 
 module MTGHelperModule
+	SANITIZATION_CHARACTERS = /(?:\u201C|\u201D|")/
 	
 	def get_search_term(params)
 		name, set = params["text"].split("#")
-		if name.include?("\u201C") || name.include?("\u201D")
-			name = name.gsub("\u201C", "")
-			name = name.gsub("\u201D", "")
-			name = name.gsub("\"", "")
-			name = "\"" + name + "\""
+		if name =~ SANITIZATION_CHARACTERS
+			name.gsub!(SANITIZATION_CHARACTERS, "")
+			name = "\"#{name}\""
 		end
 		SearchTO.new.tap do |s|
 			s.name = name

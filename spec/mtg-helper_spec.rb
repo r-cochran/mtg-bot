@@ -7,8 +7,8 @@ describe 'MTGHelperModule' do
     context 'card name provided' do
       let(:params) { { 'text' => 'mtg card' } }
 
-      it 'should defines name' do
-        expect(subject.get_search_term(params).name).to eql 'mtg card'
+      it 'should define name' do
+        expect(subject.get_search_term(params).name).to eql "mtg card"
       end
     end
 
@@ -41,6 +41,11 @@ describe 'MTGHelperModule' do
       it 'should parse out Right Double Quote UTF-8 character' do
         expect(subject.get_search_term('text' => "rad rare”").name).to eql '"rad rare"'
         expect(subject.get_search_term('text' => "rude artifact\u201D").name).to eql '"rude artifact"'
+      end
+
+      it 'should parse out extraneous double quotes' do
+        expect(subject.get_search_term('text' => 'atraxa a" shit').name).to eql '"atraxa a shit"'
+
       end
     end
   end
