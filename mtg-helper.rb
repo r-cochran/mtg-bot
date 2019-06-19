@@ -1,3 +1,5 @@
+require 'rest-client'
+require 'json'
 require 'mtg_sdk'
 require './searchTO.rb'
 require './set_map.rb'
@@ -49,27 +51,22 @@ module MTGHelperModule
 	end
 
 	def getRealCard(searchTO)
-		cards = MTG::Card.where(name: searchTO.name, set: searchTO.set).all
-		release_list = []
+		url = "https://api.scryfall.com/cards/search?q=" + searchTO.name
+		response = JSON.parse(RestClient.get(url, headers={}))
+		cards = response['data']
 		text = "No match found."
-
 		if(cards.any?)
-			card = cards.find { |c|
-				c.image_url != nil and c.image_url != "" and c.set_name != "Vanguard"
+			matches = []
+			(1..cards.length - 1).each { |n|
+				matches << cards[n]["name"]
 			}
-			if(!card.nil?)
-				text = card.image_url
-			end
-			cards.collect { |c|
-				release_list << c.set_name + "(" + c.set + ")"
-			}
-			release_list.uniq!()
+			text += "\n" + cards[0]["image_uris"]["normal"] + "\n"
+			text += "\nSet: " + cards[0]["set_name"]
+			text += "\nPrice: " + cards[0]["prices"]["usd"]
+			text += "\nGatherer: " + cards[0]["related_uris"]["gatherer"]
+			text += "\nQuery Matches(#{cards.length.to_i}): #{matches.join(", ")}"
 		end
 		text += "\n search term: " + searchTO.name
-		if(searchTO.has_set?)
-			text += "\n set: " + searchTO.set + " - " + $set_map[searchTO.set]
-		end
-		text += "\n Releases: " + release_list.join(", ")
 		text
 	end
 end
