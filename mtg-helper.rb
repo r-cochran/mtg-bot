@@ -64,11 +64,13 @@ module MTGHelperModule
 			text += "\nSet: " + cards[0]["set_name"]
 			text += "\nPrice: normal(#{cards[0]["prices"]["usd"]}), foil(#{cards[0]["prices"]["usd_foil"]})"
 			text += "\nGatherer: " + cards[0]["related_uris"]["gatherer"]
-			text += "\nQuery Matches(#{cards.length.to_i}): #{matches.join(", ")}"
+      if(matches.length > 0 )
+        text += "\nQuery Matches(#{cards.length.to_i}): #{matches.join(", ")}"
+      end
     else
       text = "No match found."
+      text += "\n search term: " + searchTO.name
 		end
-		text += "\n search term: " + searchTO.name
 		text
 	end
 end
