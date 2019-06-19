@@ -54,7 +54,7 @@ module MTGHelperModule
 		url = "https://api.scryfall.com/cards/search?q=" + searchTO.name
 		response = JSON.parse(RestClient.get(url, headers={}))
 		cards = response['data']
-		text = "No match found."
+		text = ""
 		if(cards.any?)
 			matches = []
 			(1..cards.length - 1).each { |n|
@@ -62,9 +62,11 @@ module MTGHelperModule
 			}
 			text += "\n" + cards[0]["image_uris"]["normal"] + "\n"
 			text += "\nSet: " + cards[0]["set_name"]
-			text += "\nPrice: " + cards[0]["prices"]["usd"]
+			text += "\nPrice: normal(#{cards[0]["prices"]["usd"]}), foil(#{cards[0]["prices"]["usd_foil"]})"
 			text += "\nGatherer: " + cards[0]["related_uris"]["gatherer"]
 			text += "\nQuery Matches(#{cards.length.to_i}): #{matches.join(", ")}"
+    else
+      text = "No match found."
 		end
 		text += "\n search term: " + searchTO.name
 		text
