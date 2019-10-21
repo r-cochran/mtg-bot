@@ -52,7 +52,8 @@ module MTGHelperModule
 
 	def getRealCard(searchTO)
 		url = "https://api.scryfall.com/cards/search?q=" + searchTO.name
-		response = JSON.parse(RestClient.get(url, headers={}))
+		json = RestClient.get(url, headers={})
+		response = JSON.parse(json)
 		cards = response['data']
 		text = ""
 		if(cards.any?)
@@ -63,7 +64,11 @@ module MTGHelperModule
 			text += "\n" + cards[0]["image_uris"]["normal"] + "\n"
 			text += "\nSet: " + cards[0]["set_name"]
 			text += "\nPrice: normal(#{cards[0]["prices"]["usd"]}), foil(#{cards[0]["prices"]["usd_foil"]})"
-			text += "\nGatherer: " + cards[0]["related_uris"]["gatherer"]
+			gatherer_link = cards[0]["related_uris"]["gatherer"]
+			if(gatherer_link != nil)
+				text += "\nGatherer: " + gatherer_link
+			end
+
       if(matches.length > 0 )
         text += "\nQuery Matches(#{cards.length.to_i}): #{matches.join(", ")}"
       end
